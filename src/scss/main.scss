@@ -1,0 +1,345 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// === ПЕРЕМЕННЫЕ ===
+$dark-900: #0f172a;
+$dark-800: #1e293b;
+$dark-700: #334155;
+$dark-600: #475569;
+$accent-500: #06b6d4;
+$accent-400: #22d3ee;
+$text-primary: #f1f5f9;
+$text-muted: #64748b;
+
+// === БАЗОВЫЕ СТИЛИ ===
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $dark-900;
+  color: $text-primary;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+// === ШАПКА ===
+.header {
+  background: $dark-800;
+  border-bottom: 1px solid $dark-700;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $accent-400;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  color: $accent-400;
+}
+
+// === ОСНОВНАЯ СЕТКА (Исправлено для мобильных) ===
+.main-container {
+  display: flex;          // Используем Flex вместо Grid для лучшего контроля
+  flex-direction: column; // На мобильных — вертикально
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 80px); // Высота экрана минус шапка
+
+  // На планшетах и ПК — включаем сетку
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 340px; // Карта слева, список справа
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+  }
+}
+
+// === КАРТА ===
+.map-wrapper {
+  background: $dark-800;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid $dark-700;
+  width: 100%;
+  height: 50vh; // На телефоне карта занимает пол-экрана
+
+  @media (min-width: 768px) {
+    height: 100%; // На ПК — полная высота
+  }
+}
+
+// === САЙДБАР ===
+.sidebar {
+  background: $dark-800;
+  border-radius: 12px;
+  border: 1px solid $dark-700;
+  display: flex;
+  flex-direction: column;
+  height: 50vh; // На телефоне список занимает пол-экрана
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    height: 100%; // На ПК — полная высота
+  }
+}
+#map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+
+.sidebar-top {
+  padding: 1rem;
+  border-bottom: 1px solid $dark-700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0; // Не сжимается
+  
+  h2 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.places-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+// === КНОПКИ ===
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: 0.2s;
+  white-space: nowrap;
+  
+  &:hover { transform: translateY(-1px); }
+  &:active { transform: translateY(0); }
+}
+
+.btn-primary { background: $accent-500; color: #000; &:hover { background: $accent-400; } }
+.btn-secondary { background: $dark-700; color: $text-primary; &:hover { background: $dark-600; } margin-right: 15px; }
+.btn-danger { background: #ef4444; color: white; &:hover { background: #dc2626; } }
+
+// === КАРТОЧКИ МЕСТ ===
+.place-card {
+  background: $dark-900;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid $dark-700;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: 0.2s;
+  
+  &:hover { border-color: $accent-500; }
+}
+
+.place-photo-thumb {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover { opacity: 0.9; }
+}
+
+.place-info {
+  flex: 1;
+  cursor: pointer;
+  &:hover .place-name { color: $accent-400; }
+}
+
+.place-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  transition: 0.2s;
+}
+
+.place-country { color: $accent-400; font-size: 0.8rem; }
+.place-date { color: $text-muted; font-size: 0.75rem; margin-top: 0.25rem; }
+
+// Кнопки действий в карточке (📍 и ✏️)
+.place-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.25rem;
+}
+
+.btn-card-action {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 600;
+  
+  &:hover { transform: scale(1.05); }
+}
+
+.btn-map {
+  background: $dark-700;
+  color: $accent-400;
+  border: 1px solid $dark-600;
+  
+  &:hover { background: $accent-500; color: #000; border-color: $accent-400; }
+}
+
+.btn-edit {
+  background: $dark-700;
+  color: #fbbf24;
+  border: 1px solid $dark-600;
+  
+  &:hover { background: #fbbf24; color: #000; border-color: #f59e0b; }
+}
+
+.empty-message { color: $text-muted; text-align: center; padding: 2rem 0; }
+
+// === ГОСТЕВОЕ СООБЩЕНИЕ ===
+.guest-message {
+  text-align: center;
+  padding: 100px 20px;
+  
+  h2 { font-size: 2rem; margin-bottom: 1rem; color: $accent-400; }
+  p { font-size: 1.1rem; color: $text-muted; }
+}
+
+// === МОДАЛЬНЫЕ ОКНА ===
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  
+  &.active { display: flex; }
+}
+
+.modal-content {
+  background: $dark-800;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid $dark-700;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-large { max-width: 600px; }
+
+// === ФОРМЫ ===
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: $text-muted; font-size: 0.875rem; }
+
+.form-input {
+  width: 100%;
+  padding: 0.6rem;
+  background: $dark-900;
+  border: 1px solid $dark-700;
+  color: $text-primary;
+  border-radius: 6px;
+  
+  &:focus { outline: none; border-color: $accent-500; }
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-textarea { resize: vertical; min-height: 80px; }
+
+// Загрузка файлов
+.file-upload {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: $dark-700;
+    border-radius: 6px;
+    cursor: pointer;
+    &:hover { background: $dark-600; }
+  }
+  
+  .file-input { display: none; }
+}
+
+.photo-preview {
+  margin-top: 0.5rem;
+  text-align: center;
+  display: none;
+  
+  img { max-width: 100%; max-height: 150px; border-radius: 6px; margin-bottom: 0.5rem; }
+}
+
+// Просмотр места
+.view-photo {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+.view-actions { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.error-message { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; display: none; }
+.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+
+// === СКРОЛЛБАР ===
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: $dark-900; }
+::-webkit-scrollbar-thumb { background: $dark-700; border-radius: 3px; &:hover { background: $dark-600; } }
+
+// === LEAFLET (Карта) ===
+.leaflet-container { background: $dark-800; }
+.leaflet-popup-content-wrapper { background: $dark-800; color: $text-primary; border-radius: 8px; border: 1px solid $dark-700; }
+.leaflet-popup-tip { background: $dark-800; }
+.leaflet-popup-content { margin: 10px; }

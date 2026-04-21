@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Blog</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/src/scss/main.scss">
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header class="header">
+        <div class="logo">🌍 TravelBlog</div>
+        <div class="header-actions">
+            <!-- Для гостей -->
+            <div id="guestButtons" class="auth-buttons">
+                <button id="loginBtn" class="btn btn-secondary">Войти</button>
+                <button id="registerBtn" class="btn btn-primary">Регистрация</button>
+            </div>
+            <!-- Для авторизованных -->
+            <div id="userProfile" class="user-profile" style="display: none;">
+                <span id="userName" class="user-name"></span>
+                <button id="logoutBtn" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div id="mainContent" class="main-container" style="display: none;">
+        <!-- Карта -->
+        <div class="map-wrapper">
+            <div id="map"></div>
+        </div>
+
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <h2>📍 Мои места</h2>
+                <button id="addLocationBtn" class="btn btn-primary">+ Добавить</button>
+            </div>
+            <div id="placesList" class="places-list">
+                <p class="empty-message">Пока нет мест. Добавьте первое! 🌍</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- СООБЩЕНИЕ ДЛЯ ГОСТЕЙ -->
+    <div id="guestMessage" class="guest-message">
+        <h2>👋 Добро пожаловать!</h2>
+        <p>Войдите или зарегистрируйтесь, чтобы управлять своими путешествиями</p>
+    </div>
+
+    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>🔐 Вход</h3>
+            <form id="loginForm">
+                <div class="form-group"><label>Логин</label><input type="text" id="loginUsername" class="form-input" required></div>
+                <div class="form-group"><label>Пароль</label><input type="password" id="loginPassword" class="form-input" required></div>
+                <p id="loginError" class="error-message"></p>
+                <button type="submit" class="btn btn-primary" style="width:100%">Войти</button>
+                <button type="button" id="closeLogin" class="btn btn-secondary" style="width:100%; margin-top:10px">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <h3>📝 Регистрация</h3>
+            <form id="registerForm">
+                <div class="form-group"><label>Логин</label><input type="text" id="regUsername" class="form-input" required></div>
+                <div class="form-group"><label>Пароль</label><input type="password" id="regPassword" class="form-input" required></div>
+                <div class="form-group"><label>Повторите пароль</label><input type="password" id="regPasswordConfirm" class="form-input" required></div>
+                <p id="regError" class="error-message"></p>
+                <button type="submit" class="btn btn-primary" style="width:100%">Зарегистрироваться</button>
+                <button type="button" id="closeRegister" class="btn btn-secondary" style="width:100%; margin-top:10px">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content modal-large">
+            <h3>📍 Добавить место</h3>
+            <form id="addForm">
+                <div class="form-group"><label>Название *</label><input type="text" id="placeName" class="form-input" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Широта *</label><input type="number" id="placeLat" class="form-input" step="any" required></div>
+                    <div class="form-group"><label>Долгота *</label><input type="number" id="placeLng" class="form-input" step="any" required></div>
+                </div>
+                <div class="form-group"><label>Страна</label><input type="text" id="placeCountry" class="form-input"></div>
+                <div class="form-group"><label>Заметки</label><textarea id="placeNotes" class="form-input form-textarea" rows="3"></textarea></div>
+                <div class="form-group">
+                    <label>📷 Фото</label>
+                    <input type="url" id="placePhotoUrl" class="form-input" placeholder="https://...">
+                    <div class="file-upload">
+                        <label class="file-label"><input type="file" id="placePhotoFile" class="file-input" accept="image/*"><span>📁 Выбрать файл</span></label>
+                        <span id="fileName" class="file-name"></span>
+                    </div>
+                    <div id="photoPreview" class="photo-preview"><img id="previewImg" src="" alt=""><button type="button" id="removePhoto" class="btn btn-danger btn-sm">Удалить</button></div>
+                </div>
+                <div class="form-group"><label>Дата</label><input type="date" id="placeDate" class="form-input"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%">💾 Сохранить</button>
+                <button type="button" id="closeAdd" class="btn btn-secondary" style="width:100%; margin-top:10px">Отмена</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="viewModal" class="modal">
+        <div class="modal-content modal-large">
+            <img id="viewPhoto" src="" class="view-photo">
+            <h3 id="viewTitle" class="view-title"></h3>
+            <p id="viewCountry" class="view-country"></p>
+            <p id="viewDate" class="view-date"></p>
+            <p id="viewNotes" class="view-notes"></p>
+            <div class="view-actions">
+                <button id="editPlaceBtn" class="btn btn-secondary">✏️ Редактировать</button>
+                <button id="deletePlaceBtn" class="btn btn-danger">🗑️ Удалить</button>
+            </div>
+            <button id="closeView" class="btn btn-secondary" style="width:100%; margin-top:10px">Закрыть</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="/src/js/main.js"></script>
+</body>
+</html>
